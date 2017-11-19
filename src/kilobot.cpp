@@ -1,14 +1,15 @@
 #pragma once
 #include "kilolib.h"
 
-#define R1 120
-#define R2 48
-#define R3 96
+#define R1 60
+#define R2 125
+#define R3 160
 #define TICKSTOLISTEN 10
+#define ROTATIONPERTICK 0.05
+#define DISTANCEPERTICK 0.5
 
 class mykilobot : public kilobot
 {
-
 	unsigned char dist;
 	float theta;
 	message_t out_message;
@@ -18,10 +19,17 @@ class mykilobot : public kilobot
 	float motion_vec_y = 0;
 	float repul_const = 0.2;
 
-
 	//main loop
 	void loop()
 	{
+		if (id == 0) {
+			set_color(RGB(3,0,0));
+		} else if (id == 1){
+			set_color(RGB(0,3,0));
+		} else {
+			set_color(RGB(0,0,3));
+		}
+
 		if (newcycle) {
 			motion_timer = kilo_ticks;
 			motion_vec_x = sin(angle_to_light);
@@ -31,9 +39,10 @@ class mykilobot : public kilobot
 			// convert back to polar coords
 			float bearing = atan2(motion_vec_x, motion_vec_y);
 			float disttogo = distance(0, 0, motion_vec_x, motion_vec_y);
-			int tickstorotate = (int)(abs(bearing/0.05));
-			int tickstomove = (int)(disttogo/0.5);
-			printf("bearing: %f, dist: %f\n",angle_to_light, disttogo);
+			int tickstorotate = (int)(abs(bearing/ROTATIONPERTICK));
+			int tickstomove = (int)(disttogo/DISTANCEPERTICK);
+			// printf("bearing: %f, dist: %f\n",angle_to_light, disttogo);
+			// printf("tickstorotate: %d, tickstomove: %d\n", tickstorotate, tickstomove);
 
 			if (kilo_ticks <= motion_timer + TICKSTOLISTEN) {
 				// listen for incoming messages
@@ -48,17 +57,11 @@ class mykilobot : public kilobot
 			} else if (kilo_ticks <= motion_timer + TICKSTOLISTEN + tickstorotate + tickstomove)  {
 				// move forward phase
 				spinup_motors();
-				// printf("disttogo: %f\n", disttogo);
-				// if (disttogo > 0) {
-					set_motors(kilo_straight_left, kilo_straight_right);
-				// }
+				set_motors(kilo_straight_left, kilo_straight_right);
 			} else {
 					newcycle = 1;
 			}
 		}
-
-
-
 
 		// send out message
 		out_message.type = NORMAL;
@@ -75,11 +78,6 @@ class mykilobot : public kilobot
 	//executed once at start
 	void setup()
 	{
-		if (id == 1) {
-			set_color(RGB(3,0,0));
-		} else {
-			set_color(RGB(0,3,0));
-		}
 		motion_timer = kilo_ticks;
 		newcycle = 1;
 	}
@@ -87,7 +85,6 @@ class mykilobot : public kilobot
 	//executed on successfull message send
 	void message_tx_success()
 	{
-
 
 	}
 
@@ -109,11 +106,16 @@ class mykilobot : public kilobot
 		if (kilo_ticks <= motion_timer + TICKSTOLISTEN) {
 			dist = estimate_distance(distance_measurement);
 			theta=t;
-			// printf("receives message, dist: %d\n", dist);
-			if (dist < 2*R1) {
-				float x_repel = repul_const * (-sin(theta) * (2*R1 - dist));
-				float y_repel = repul_const * (-cos(theta) * (2*R1 - dist));
-				// printf("x_repel: %f, y_repel: %f, dist: %d\n", x_repel, y_repel, dist);
+			// printf("dist: %d\n", dist);
+			int r;
+			switch (id) {
+				case 0: r = R1; break;
+				case 1: r = R2; break;
+				case 2: r = R3; break;
+			}
+			if (dist < 2 * r) {
+				float x_repel = repul_const * (-sin(theta) * (2*r - dist));
+				float y_repel = repul_const * (-cos(theta) * (2*r - dist));
 				motion_vec_x += x_repel;
 				motion_vec_y += y_repel;
 			}
