@@ -1,11 +1,10 @@
 #pragma once
 #include "kilolib.h"
 
-// calibration
-#define BEARING_TO_RAD M_PI/(4*0.785398)
 #define R1 120
 #define R2 48
 #define R3 96
+#define TICKSTOLISTEN 10
 
 class mykilobot : public kilobot
 {
@@ -36,9 +35,9 @@ class mykilobot : public kilobot
 			int tickstomove = (int)(disttogo/0.5);
 			printf("bearing: %f, dist: %f\n",angle_to_light, disttogo);
 
-			if (kilo_ticks <= motion_timer + 20) {
+			if (kilo_ticks <= motion_timer + TICKSTOLISTEN) {
 				// listen for incoming messages
-			} else if (kilo_ticks <= motion_timer + 20 + tickstorotate) {
+			} else if (kilo_ticks <= motion_timer + TICKSTOLISTEN + tickstorotate) {
 				// turn phase
 				spinup_motors();
 				if (bearing >= 0) {
@@ -46,7 +45,7 @@ class mykilobot : public kilobot
 				} else {
 					set_motors(kilo_turn_left,0);
 				}
-			} else if (kilo_ticks <= motion_timer + tickstorotate + tickstomove)  {
+			} else if (kilo_ticks <= motion_timer + TICKSTOLISTEN + tickstorotate + tickstomove)  {
 				// move forward phase
 				spinup_motors();
 				// printf("disttogo: %f\n", disttogo);
@@ -97,7 +96,7 @@ class mykilobot : public kilobot
 	{
 		static int count = rand();
 		count--;
-		if (!(count % 20))
+		if (!(count % TICKSTOLISTEN))
 		{
 			return &out_message;
 		}
@@ -107,7 +106,7 @@ class mykilobot : public kilobot
 	//receives message
 	void message_rx(message_t *message, distance_measurement_t *distance_measurement,float t)
 	{
-		// if (kilo_ticks <= motion_timer + 20) {
+		if (kilo_ticks <= motion_timer + TICKSTOLISTEN) {
 			dist = estimate_distance(distance_measurement);
 			theta=t;
 			// printf("receives message, dist: %d\n", dist);
@@ -118,6 +117,6 @@ class mykilobot : public kilobot
 				motion_vec_x += x_repel;
 				motion_vec_y += y_repel;
 			}
-		// }
+		}
 	}
 };
