@@ -1,4 +1,6 @@
 #define ROBOT_COUNT 210
+#define NUM_IN_GROUP 70
+#define NUM_OF_GROUP 3
 #define ROBOT_SPACING 40
 
 #define ARENA_WIDTH (32*32 + 33*ROBOT_SPACING) * 2
@@ -88,11 +90,11 @@ void setup_positions(float robot_pos[ROBOT_COUNT][4])
 		robot_pos[i][1] = y;
 		robot_pos[i][2] = theta;
 		robot_pos[i][3] = 0;
-		if (i >= 70) {
+		if (i >= NUM_IN_GROUP) {
 			robot_pos[i][3] = 1;
 		}
-		if (i >= 140) {
-			robot_pos[i][3] = 2; 
+		if (i >= NUM_IN_GROUP * 2) {
+			robot_pos[i][3] = 2;
 		}
 		i++;
 	}

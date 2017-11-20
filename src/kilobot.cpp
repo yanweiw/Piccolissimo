@@ -68,12 +68,15 @@ class mykilobot : public kilobot
 		out_message.data[0] = id;
 		out_message.crc = message_crc(&out_message);
 
-		switch (id) {
-			// case 0: set_color(RGB(3,0,0)); break;
-			// case 1: set_color(RGB(0,3,0)); break;
-			// case 3: set_color(RGB(0,0,3)); break;
-		}
+		// calc segregation error
+		// printf("segregation error: %f\n", measure_metric());
+
 	}
+
+	// measure segregation error
+	// flaot Measure_metric() {
+
+	// }
 
 	//executed once at start
 	void setup()

@@ -14,6 +14,7 @@
 #include <chrono>
 #include <thread>
 
+FILE * fp;
 
 #define SIMPLEBMP_OPENGL
 #include "simplebmp.h"
@@ -179,21 +180,29 @@ void save_bmp(const char *fileName)
 void measure_metric()
 {
 
+	int error = 0;
 	for (int ii = num_robots-1; ii >= 0; ii--) {
 		for (int jj = num_robots-1; jj >= 0; jj--) {
 			if (ii != jj) {
 				//usefull things to use
-				//robots[ii]->pos[0]
-				//robots[ii]->pos[1]
-				//robots[jj]->pos[0]
-				//robots[jj]->pos[1]
-				//light_center[0]
-				//light_center[1]
-
-
+				int x1 = robots[ii]->pos[0];
+				int y1 = robots[ii]->pos[1];
+				int x2 = robots[jj]->pos[0];
+				int y2 = robots[jj]->pos[1];
+				int o1 = light_center[0];
+				int o2 = light_center[1];
+				float dist1 = sqrt(pow(x1 - o1, 2) + pow(y1 - o2, 2));
+				float dist2 = sqrt(pow(x2 - o1, 2) + pow(y2 - o2, 2));
+				if ((robots[ii]->id < robots[jj]->id && dist1 >= dist2)
+				 || (robots[ii]->id > robots[jj]->id && dist1 <= dist2)) {
+						error++;
+					}
 				}
 			}
 		}
+		float SE = (float)error / (pow(210,2) - 3 * pow(70,2));
+		printf("SE: %f, error: %d \n", SE, error);
+		fprintf(fp, "%f\n", SE);
 	}
 
 
@@ -492,6 +501,9 @@ void on_idle(void) {
 // Main routine.
 int main(int argc, char **argv)
 {
+
+	fp = fopen("SE_log", "a");
+
 	for (int i = 0;i < argc-1;i++)
 	{
 		if (strcmp(argv[i],"/r")==0)
@@ -626,5 +638,6 @@ int main(int argc, char **argv)
 		glutKeyboardFunc(key_input);
 		glutMainLoop();
 	}
+	fclose (fp);
 	return 0;
 }
