@@ -202,7 +202,10 @@ void measure_metric()
 		}
 		float SE = (float)error / (pow(210,2) - 3 * pow(70,2));
 		printf("SE: %f, error: %d \n", SE, error);
-		fprintf(fp, "%f\n", SE);
+		if (iteration < 5050) {
+			fprintf(fp, "%f\n", SE);
+			iteration++;
+		}
 	}
 
 
