@@ -1,10 +1,10 @@
-#define ROBOT_COUNT 210
-#define NUM_IN_GROUP 70
-#define NUM_OF_GROUP 3
+#define ROBOT_COUNT 3
+#define NUM_IN_GROUP 3
+#define NUM_OF_GROUP 1
 #define ROBOT_SPACING 40
 
-#define ARENA_WIDTH (32*32 + 33*ROBOT_SPACING) * 2
-#define ARENA_HEIGHT (32*32 + 33*ROBOT_SPACING) * 2
+#define ARENA_WIDTH (32*32 + 33*ROBOT_SPACING) * 1
+#define ARENA_HEIGHT (32*32 + 33*ROBOT_SPACING) * 1
 
 #define LIGHT_CENTER_X ARENA_WIDTH / 2
 #define LIGHT_CENTER_Y ARENA_HEIGHT / 2
@@ -55,5 +55,20 @@ void setup_positions(float robot_pos[ROBOT_COUNT][4])
 		}
 		i++;
 	}
+
+	robot_pos[0][0]=1000;
+	robot_pos[0][1]=1000;
+	robot_pos[0][2]=rand()*2*PI/RAND_MAX;
+	robot_pos[0][3]=0;
+
+	robot_pos[1][0]=1100;
+	robot_pos[1][1]=1000;
+	robot_pos[1][2]=rand()*2*PI/RAND_MAX;
+	robot_pos[1][3]=1;
+
+	robot_pos[2][0]=1050;
+	robot_pos[2][1]=1100;
+	robot_pos[2][2]=rand()*2*PI/RAND_MAX;
+	robot_pos[2][3]=1;
 
 }
