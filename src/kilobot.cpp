@@ -55,7 +55,7 @@ class mykilobot : public kilobot
 		motion_vec_y = align_vec_y - migra_vec_y - separ_vec_y - cohes_vec_y;
 		float bearing = atan2(motion_vec_x, motion_vec_y);
 		float disttogo = distance(0, 0, motion_vec_x, motion_vec_y);
-		int tickstorotate = (int)(abs(bearing/ROTATIONPERTICK)/10);
+		int tickstorotate = (int)(abs(bearing/ROTATIONPERTICK)/5);
 		int tickstomove = (int) (disttogo/DISTANCEPERTICK);
 		printf("ticks to rotate: %d\n", tickstorotate);
 		printf("ticks to move: %d\n", tickstomove);
@@ -68,6 +68,9 @@ class mykilobot : public kilobot
 				set_motors(kilo_turn_left,0);
 			}
 		}
+		// if (kilo_ticks < motion_timer + tickstorotate + tickstomove) {
+		// 	set_motors(kilo_straight_left, kilo_straight_right);
+		// }
 
 		out_message.crc=message_crc(&out_message);
 	}
