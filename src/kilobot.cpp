@@ -25,6 +25,9 @@ class mykilobot : public kilobot
 	int alreadyset=0;
 	int id1;
 	int id2; // use id1 and id2, together 16 bits, as identity in communication
+	float align_vec_x = 0;
+	float align_vec_y = 0;
+
 
 	//main loop
 	void loop()
@@ -43,10 +46,20 @@ class mykilobot : public kilobot
 
 		spinup_motors();
 		motion_timer = kilo_ticks;
-		int tickstorotate = (int)(abs(angletoturn/ROTATIONPERTICK));
+		float bearing = atan2(align_vec_x, align_vec_y);
+		int tickstorotate = (int)(abs(bearing/ROTATIONPERTICK))/10;
 		printf("ticks to rotate: %d\n", tickstorotate);
-		if (kilo_ticks < motion_timer + tickstorotate / 3) {
-			if (angletoturn >= 0) {
+		if (kilo_ticks < motion_timer + tickstorotate) {
+			if (bearing <= 0) {
+				set_motors(0,kilo_turn_right);
+			} else {
+				set_motors(kilo_turn_left,0);
+			}
+		}
+		int tickstolight = (int)(abs(angle_to_light/10)/ROTATIONPERTICK);
+		printf("ticks to light: %d\n", tickstolight);
+		if (kilo_ticks < motion_timer + tickstorotate + tickstolight) {
+			if (angle_to_light >= 0) {
 				set_motors(0,kilo_turn_right);
 			} else {
 				set_motors(kilo_turn_left,0);
@@ -130,12 +143,16 @@ class mykilobot : public kilobot
 		int angle_int = message->data[2];
 		if (angle_int != 255) { // 255 -> blank; 0-127 -> -PI-0; 127-254 -> 0-PI
 			if (message->data[3]==id1 && message->data[4]==id2){
-				angletoturn = theta - (angle_int - 127) * RADPERINT;
-				if (angletoturn <= 0) {
-					angletoturn = (PI + angletoturn) / 2;
-				} else {
-					angletoturn = (-PI + angletoturn) / 2;
-				}
+				angletoturn = (theta - (angle_int - 127) * RADPERINT - PI);
+				align_vec_x = (-sin(angletoturn/10));
+				align_vec_y = (-cos(angletoturn/10));
+
+				// if (angletoturn <= 0) {
+				// 	angletoturn = (PI + angletoturn) / 2;
+				// } else {
+				// 	angletoturn = (-PI + angletoturn) / 2;
+				// }
+
 			}
 		}
 		out_message.data[2] = (int)((theta + PI) / RADPERINT);

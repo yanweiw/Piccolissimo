@@ -56,18 +56,18 @@ void setup_positions(float robot_pos[ROBOT_COUNT][4])
 		i++;
 	}
 
-	robot_pos[0][0]=1000;
-	robot_pos[0][1]=1000;
+	robot_pos[0][0]=100;
+	robot_pos[0][1]=100;
 	robot_pos[0][2]=rand()*2*PI/RAND_MAX;
 	robot_pos[0][3]=0;
 
-	robot_pos[1][0]=1100;
-	robot_pos[1][1]=1000;
+	robot_pos[1][0]=200;
+	robot_pos[1][1]=100;
 	robot_pos[1][2]=rand()*2*PI/RAND_MAX;
 	robot_pos[1][3]=1;
 
-	robot_pos[2][0]=1050;
-	robot_pos[2][1]=1100;
+	robot_pos[2][0]=150;
+	robot_pos[2][1]=150;
 	robot_pos[2][2]=rand()*2*PI/RAND_MAX;
 	robot_pos[2][3]=1;
 
