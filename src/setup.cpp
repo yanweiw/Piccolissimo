@@ -55,36 +55,4 @@ void setup_positions(float robot_pos[ROBOT_COUNT][4])
 		}
 		i++;
 	}
-
-	// robot_pos[0][0]=100;
-	// robot_pos[0][1]=100;
-	// robot_pos[0][2]=rand()*2*PI/RAND_MAX;
-	// robot_pos[0][3]=1;
-	//
-	// robot_pos[1][0]=200;
-	// robot_pos[1][1]=100;
-	// robot_pos[1][2]=rand()*2*PI/RAND_MAX;
-	// robot_pos[1][3]=1;
-	//
-	// robot_pos[2][0]=150;
-	// robot_pos[2][1]=150;
-	// robot_pos[2][2]=rand()*2*PI/RAND_MAX;
-	// robot_pos[2][3]=1;
-	//
-	// robot_pos[3][0]=250;
-	// robot_pos[3][1]=250;
-	// robot_pos[3][2]=rand()*2*PI/RAND_MAX;
-	// robot_pos[3][3]=1;
-	//
-	// robot_pos[4][0]=200;
-	// robot_pos[4][1]=200;
-	// robot_pos[4][2]=rand()*2*PI/RAND_MAX;
-	// robot_pos[4][3]=1;
-	//
-	// robot_pos[5][0]=100;
-	// robot_pos[5][1]=200;
-	// robot_pos[5][2]=rand()*2*PI/RAND_MAX;
-	// robot_pos[5][3]=1;
-	//
-
 }

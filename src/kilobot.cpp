@@ -31,13 +31,7 @@ class mykilobot : public kilobot
 	//main loop
 	void loop()
 	{
-		if (id == 0) {
-			set_color(RGB(3,0,0));
-		} else if (id == 1) {
-			set_color(RGB(0,3,0));
-		} else {
-			set_color(RGB(0,0,3));
-		}
+		set_color(RGB(1,0,0));
 
 		out_message.type=NORMAL;
 		out_message.data[0]=id1;
@@ -57,10 +51,6 @@ class mykilobot : public kilobot
 		float disttogo = distance(0, 0, motion_vec_x, motion_vec_y);
 		int tickstorotate = (int)(abs(bearing/ROTATIONPERTICK)/5);
 		int tickstomove = (int) (disttogo/DISTANCEPERTICK);
-		// printf("ticks to rotate: %d\n", tickstorotate);
-		// printf("ticks to move: %d\n", tickstomove);
-		// printf("align_x: %f, migra_x: %f, separ_x: %f, cohes_x: %f\n", align_vec_x, migra_vec_x, separ_vec_x, cohes_vec_x);
-		// printf("align_y: %f, migra_y: %f, separ_y: %f, cohes_y: %f\n", align_vec_y, migra_vec_y, separ_vec_y, cohes_vec_y);
 		if (kilo_ticks < motion_timer + tickstorotate) {
 			if (bearing <= 0) {
 				set_motors(0,kilo_turn_right);
@@ -68,9 +58,6 @@ class mykilobot : public kilobot
 				set_motors(kilo_turn_left,0);
 			}
 		}
-		// if (kilo_ticks < motion_timer + tickstorotate + tickstomove) {
-		// 	set_motors(kilo_straight_left, kilo_straight_right);
-		// }
 
 		out_message.crc=message_crc(&out_message);
 	}
