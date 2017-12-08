@@ -158,7 +158,7 @@ public:
 	{
 		if (sd>(100*radius)) return 0; // it's more than 10 cm away
 		double d = distance(x,y,pos[0],pos[1]);
-		if (d < 100* radius)
+		if (d < 100 * radius)
 			return d;
 		return 0;
 	}

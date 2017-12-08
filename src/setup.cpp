@@ -1,5 +1,5 @@
-#define ROBOT_COUNT 50
-#define NUM_IN_GROUP 50
+#define ROBOT_COUNT 100
+#define NUM_IN_GROUP 100
 #define NUM_OF_GROUP 1
 #define ROBOT_SPACING 40
 
