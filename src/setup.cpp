@@ -1,10 +1,10 @@
-#define ROBOT_COUNT 100
-#define NUM_IN_GROUP 100
+#define ROBOT_COUNT 1
+#define NUM_IN_GROUP 1
 #define NUM_OF_GROUP 1
 #define ROBOT_SPACING 40
 
-#define ARENA_WIDTH (32*32 + 33*ROBOT_SPACING) * 2
-#define ARENA_HEIGHT (32*32 + 33*ROBOT_SPACING) * 2
+#define ARENA_WIDTH (32*32 + 33*ROBOT_SPACING)
+#define ARENA_HEIGHT (32*32 + 33*ROBOT_SPACING)
 
 #define LIGHT_CENTER_X ARENA_WIDTH / 2
 #define LIGHT_CENTER_Y ARENA_HEIGHT / 2
@@ -32,27 +32,32 @@ void setup_positions(float robot_pos[ROBOT_COUNT][4])
 
 //assign each robot a random position, centered around light source
 	int robot_num;
-	int x=100;
-	int y=100;
+	int x= ARENA_WIDTH / 2;
+	int y= ARENA_HEIGHT / 2;
 
-	int i = 0; //upper limit for iteration
-	while (i < ROBOT_COUNT) {
-		float x = (float) rand() * (ARENA_WIDTH-2*radius) / RAND_MAX + radius;
-		float y = (float) rand() * (ARENA_HEIGHT-2*radius) / RAND_MAX + radius;
-		float theta = rand() * 2 * PI / RAND_MAX;
-		if (collision(x, y, robot_pos, i)) {
-			continue;
-		}
-		robot_pos[i][0] = x;
-		robot_pos[i][1] = y;
-		robot_pos[i][2] = theta;
-		robot_pos[i][3] = 0;
-		if (i >= NUM_IN_GROUP) {
-			robot_pos[i][3] = 1;
-		}
-		if (i >= NUM_IN_GROUP * 2) {
-			robot_pos[i][3] = 2;
-		}
-		i++;
-	}
+	// int i = 0; //upper limit for iteration
+	// while (i < ROBOT_COUNT) {
+	// 	float x = (float) rand() * (ARENA_WIDTH-2*radius) / RAND_MAX + radius;
+	// 	float y = (float) rand() * (ARENA_HEIGHT-2*radius) / RAND_MAX + radius;
+	// 	float theta = rand() * 2 * PI / RAND_MAX;
+	// 	if (collision(x, y, robot_pos, i)) {
+	// 		continue;
+	// 	}
+	// 	robot_pos[i][0] = x;
+	// 	robot_pos[i][1] = y;
+	// 	robot_pos[i][2] = theta;
+	// 	robot_pos[i][3] = 0;
+	// 	if (i >= NUM_IN_GROUP) {
+	// 		robot_pos[i][3] = 1;
+	// 	}
+	// 	if (i >= NUM_IN_GROUP * 2) {
+	// 		robot_pos[i][3] = 2;
+	// 	}
+	// 	i++;
+	// }
+
+	robot_pos[0][0] = x;
+	robot_pos[0][1] = y;
+	robot_pos[0][2] = 0;
+
 }

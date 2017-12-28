@@ -42,6 +42,6 @@ void robot::robot_init(double x, double y, double t)
 	tx_request = 0;
 	id = rand();
 	rand();
-	motor_error =  robot::gauss_rand(timer)*motion_error_std;
+	motor_error =  0;//robot::gauss_rand(timer)*motion_error_std;
 	init();
 }

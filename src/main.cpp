@@ -43,7 +43,7 @@ robot** robots;//creates an array of robots
 int* safe_distance;
 int* order;
 
-int delay = 0;
+int delay = 10;
 int draw_delay=1;
 FILE *results;
 
@@ -269,7 +269,7 @@ bool run_simulation_step()
 		case 2:
 		{
 			t += rotation_step;
-			s = r->speed;
+			s = 0;//r->speed;
 			if (r->pos[2] > twicePi)
 			{
 				r->pos[2] -= twicePi;
@@ -279,7 +279,7 @@ bool run_simulation_step()
 		case 3:
 		{
 			t -= rotation_step;
-			s = r->speed;
+			s = 0;//r->speed;
 			if (r->pos[2] < 0)
 			{
 				r->pos[2] += twicePi;
