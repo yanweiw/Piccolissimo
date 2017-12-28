@@ -43,7 +43,7 @@ robot** robots;//creates an array of robots
 int* safe_distance;
 int* order;
 
-int delay = 10;
+int delay = 20;
 int draw_delay=1;
 FILE *results;
 

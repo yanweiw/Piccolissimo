@@ -32,7 +32,9 @@ class mykilobot : public kilobot
 	void loop()
 	{
 		set_color(RGB(1,0,0));
-
+		if (angle_to_light < 0.3 && angle_to_light > -0.3){
+			set_color(RGB(0,1,0));
+		}
 		// out_message.type=NORMAL;
 		// out_message.data[0]=id1;
 		// out_message.data[1]=id2;
@@ -62,8 +64,14 @@ class mykilobot : public kilobot
 		// out_message.crc=message_crc(&out_message);
 
 		spinup_motors();
-		set_motors(50,0);
+		if (motion_timer % 1 == 0) {
+			set_motors(50,0);
+		} else {
+			set_motors(50,50);
+		}
+		motion_timer++;
 
+		printf("%f\n", angle_to_light);
 	}
 
 	//executed once at start
