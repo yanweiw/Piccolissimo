@@ -82,11 +82,14 @@ class mykilobot : public kilobot
 		if (id == 0){
 			spinup_motors();
 			set_motors(50,0);
-			if (motion_flag && motion_flag == phase)
+			if (motion_flag && motion_flag != phase)
 			{
-				prev_motion = motion_flag;
-				if (motion_timer % 4 == 0) {
-					set_motors(50,50);
+				if (prev_motion || phase == motion_flag % 3 + 1)
+				{
+					prev_motion = motion_flag;
+					if (motion_timer % 4 == 0) {
+						set_motors(50,50);
+					}
 				}
 			}
 			motion_timer++;
@@ -146,14 +149,14 @@ class mykilobot : public kilobot
 			{
 				phase_start[next_phase] = motion_timer;
 				phase_interval[phase] = phase_start[next_phase] - phase_start[phase];
-				if (motion_flag && prev_motion) {// prev_motion is nonzero only when the new motion que has started
+				if (motion_flag == next_phase && prev_motion) {// prev_motion is nonzero only when the new motion que has started
 					motion_flag = 0;
-				} else if (phase == prev_motion) {
+				} else if (!motion_flag && phase == prev_motion) {
 					int longest_phase = 1;
 					for (int i = 2; i <= 3; i++) {
 						if (phase_interval[i] > phase_interval[i-1]) {longest_phase = i;}
 					}
-					motion_flag = longest_phase % 3 + 1;
+					motion_flag = longest_phase;
 					prev_motion = 0; // signifies a new motion_flag set and to be executed
 				}
 				phase = next_phase;

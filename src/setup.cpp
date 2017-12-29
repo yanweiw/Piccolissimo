@@ -57,10 +57,10 @@ void setup_positions(float robot_pos[ROBOT_COUNT][4])
 	// }
 
 // triangular positions
-	robot_pos[0][0] = x-200;
-	robot_pos[0][1] = y+100;
-	robot_pos[0][2] = 0;
-	robot_pos[0][3] = 0;
+	// robot_pos[0][0] = x-200;
+	// robot_pos[0][1] = y+100;
+	// robot_pos[0][2] = 0;
+	// robot_pos[0][3] = 0;
 	robot_pos[1][0] = x;
 	robot_pos[1][1] = y + 200;
 	robot_pos[1][2] = 0;
@@ -73,18 +73,18 @@ void setup_positions(float robot_pos[ROBOT_COUNT][4])
 	robot_pos[3][1] = y - 100;
 	robot_pos[3][2] = 0;
 	robot_pos[3][3] = 2;
-	// float x0;
-	// float y0;
-	// float t0;
-	// do
-	// {
-	// 	x0 = (float) rand() * (ARENA_WIDTH-2*radius) / RAND_MAX + radius;
-	// 	y0 = (float) rand() * (ARENA_HEIGHT-2*radius) / RAND_MAX + radius;
-	// 	t0 = rand() * 2 * PI / RAND_MAX;
-	// } while (collision(x0, y0, robot_pos, 0));
-	// robot_pos[0][0] = x0;
-	// robot_pos[0][1] = y0;
-	// robot_pos[0][2] = t0;
-	// robot_pos[0][3] = 0;
+	float x0;
+	float y0;
+	float t0;
+	do
+	{
+		x0 = (float) rand() * (ARENA_WIDTH-2*radius) / RAND_MAX + radius;
+		y0 = (float) rand() * (ARENA_HEIGHT-2*radius) / RAND_MAX + radius;
+		t0 = rand() * 2 * PI / RAND_MAX;
+	} while (collision(x0, y0, robot_pos, 0));
+	robot_pos[0][0] = x0;
+	robot_pos[0][1] = y0;
+	robot_pos[0][2] = t0;
+	robot_pos[0][3] = 0;
 
 }
