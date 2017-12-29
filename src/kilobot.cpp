@@ -31,10 +31,18 @@ class mykilobot : public kilobot
 	//main loop
 	void loop()
 	{
+		// printf("%d\n", id);
+
 		set_color(RGB(1,0,0));
-		if (angle_to_light < 0.3 && angle_to_light > -0.3){
-			set_color(RGB(0,1,0));
+		if (id == 0){
+			// printf("%f\n", theta);
+			if (theta < 6.6 && theta > 6) {
+				set_color(RGB(0,1,0));
+			}
 		}
+		// if (angle_to_light < 0.3 && angle_to_light > -0.3){
+			// set_color(RGB(0,1,0));
+		// }
 		// out_message.type=NORMAL;
 		// out_message.data[0]=id1;
 		// out_message.data[1]=id2;
@@ -62,30 +70,35 @@ class mykilobot : public kilobot
 		// }
     //
 		// out_message.crc=message_crc(&out_message);
-
-		spinup_motors();
-		if (motion_timer % 1 == 0) {
-			set_motors(50,0);
+		if (id == 0){
+			spinup_motors();
+			if (motion_timer % 1 == 0) {
+				set_motors(50,0);
+			} else {
+				set_motors(50,50);
+			}
+			motion_timer++;
 		} else {
-			set_motors(50,50);
+			out_message.type=NORMAL;
+			out_message.crc=message_crc(&out_message);
 		}
-		motion_timer++;
 
-		printf("%f\n", angle_to_light);
+
+		// printf("%f\n", angle_to_light);
 	}
 
 	//executed once at start
 	void setup()
 	{
-		out_message.type = NORMAL;
-		id1 = rand() % 256;
-		id2 = rand() % 256;
-		out_message.data[0] = id1; // sender id
-		out_message.data[1] = id2;
-		out_message.data[2] = 255; // 255 signifies blank message
-		out_message.data[3] = 0;
-		out_message.data[4] = 0; // target recepient id , currently blank
-		out_message.crc = message_crc(&out_message);
+		// out_message.type = NORMAL;
+		// id1 = rand() % 256;
+		// id2 = rand() % 256;
+		// out_message.data[0] = id1; // sender id
+		// out_message.data[1] = id2;
+		// out_message.data[2] = 255; // 255 signifies blank message
+		// out_message.data[3] = 0;
+		// out_message.data[4] = 0; // target recepient id , currently blank
+		// out_message.crc = message_crc(&out_message);
 	}
 
 	//executed on successfull message send
@@ -110,21 +123,21 @@ class mykilobot : public kilobot
 	{
 		dist = estimate_distance(distance_measurement);
 		theta=t;
-		int angle_int = message->data[2];
-		if (angle_int != 255) { // 255 -> blank; 0-127 -> -PI-0; 127-254 -> 0-PI
-			if (message->data[3]==id1 && message->data[4]==id2){
-				float angletoturn = (theta - (angle_int - 127) * RADPERINT - PI);
-				align_vec_x = ALIGN_CONST * (-sin(angletoturn));
-				align_vec_y = ALIGN_CONST * (-cos(angletoturn));
-			}
-		}
-		out_message.data[2] = (int)((theta + PI) / RADPERINT);
-		out_message.data[3] = message->data[0];
-		out_message.data[4] = message->data[1];
-
-		separ_vec_x += REPUL_CONST * (-sin(theta)) / dist;
-		separ_vec_y += REPUL_CONST * (-cos(theta)) / dist;
-		cohes_vec_x += COHES_CONST * (sin(theta) * dist);
-		cohes_vec_y += COHES_CONST * (cos(theta) * dist);
+		// int angle_int = message->data[2];
+		// if (angle_int != 255) { // 255 -> blank; 0-127 -> -PI-0; 127-254 -> 0-PI
+		// 	if (message->data[3]==id1 && message->data[4]==id2){
+		// 		float angletoturn = (theta - (angle_int - 127) * RADPERINT - PI);
+		// 		align_vec_x = ALIGN_CONST * (-sin(angletoturn));
+		// 		align_vec_y = ALIGN_CONST * (-cos(angletoturn));
+		// 	}
+		// }
+		// out_message.data[2] = (int)((theta + PI) / RADPERINT);
+		// out_message.data[3] = message->data[0];
+		// out_message.data[4] = message->data[1];
+    //
+		// separ_vec_x += REPUL_CONST * (-sin(theta)) / dist;
+		// separ_vec_y += REPUL_CONST * (-cos(theta)) / dist;
+		// cohes_vec_x += COHES_CONST * (sin(theta) * dist);
+		// cohes_vec_y += COHES_CONST * (cos(theta) * dist);
 	}
 };

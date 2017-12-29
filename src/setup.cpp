@@ -1,4 +1,4 @@
-#define ROBOT_COUNT 1
+#define ROBOT_COUNT 2
 #define NUM_IN_GROUP 1
 #define NUM_OF_GROUP 1
 #define ROBOT_SPACING 40
@@ -59,5 +59,13 @@ void setup_positions(float robot_pos[ROBOT_COUNT][4])
 	robot_pos[0][0] = x;
 	robot_pos[0][1] = y;
 	robot_pos[0][2] = 0;
+	robot_pos[0][3] = 0;
+	robot_pos[1][0] = x;
+	robot_pos[1][1] = y + 200;
+	robot_pos[1][2] = 0;
+	robot_pos[1][3] = 1;
+	robot_pos[2][0] = x + 200;
+	robot_pos[2][1] = y + 200;
+	robot_pos[2][2] = 0;
 
 }
