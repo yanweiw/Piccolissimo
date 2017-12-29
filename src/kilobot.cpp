@@ -17,6 +17,10 @@ class mykilobot : public kilobot
 	long int motion_timer = 0;
 	int phase = 0; // phase change occurs when see new robot whose id denotes the new phase
 	// 0 phase is the initial state
+	long int phase_start[4]; // array to record start time of each phase
+	int phase_interval[4];
+	int motion_flag = 0; // 0 means stop, nonzero means move at that phase
+	int prev_motion = 0; // record previous motion phase
 
 	//main loop
 	void loop()
@@ -25,7 +29,7 @@ class mykilobot : public kilobot
 
 		set_color(RGB(1,1,1));
 		if (id == 0){
-			// printf("%d\n", phase);
+			// printf("phase 1: %d, phase 2: %d, phase 3: %d\n", phase_interval[1], phase_interval[2], phase_interval[3]);
 			switch (phase)
 			{
 				case 1:
@@ -77,10 +81,13 @@ class mykilobot : public kilobot
 		// out_message.crc=message_crc(&out_message);
 		if (id == 0){
 			spinup_motors();
-			if (motion_timer % 1 == 0) {
-				set_motors(50,0);
-			} else {
-				set_motors(50,50);
+			set_motors(50,0);
+			if (motion_flag && motion_flag == phase)
+			{
+				prev_motion = motion_flag;
+				if (motion_timer % 4 == 0) {
+					set_motors(50,50);
+				}
 			}
 			motion_timer++;
 		} else {
@@ -129,12 +136,28 @@ class mykilobot : public kilobot
 	{
 		dist = estimate_distance(distance_measurement);
 		theta=t;
-		if (id == 0 && message->data[0] == 3)
-		{
+		// if (id == 0 && message->data[0] == 3)
+		// {
 			// printf("id: %d, theta: %f\n", message->data[0], theta);
-		}
+		// }
 		if (id == 0 && ((theta < 6.5 && theta > 6.1) || (theta < 0.2 && theta > -0.2))) {
-			phase = message->data[0];
+			int next_phase = message->data[0];
+			if (phase != next_phase)
+			{
+				phase_start[next_phase] = motion_timer;
+				phase_interval[phase] = phase_start[next_phase] - phase_start[phase];
+				if (motion_flag && prev_motion) {// prev_motion is nonzero only when the new motion que has started
+					motion_flag = 0;
+				} else if (phase == prev_motion) {
+					int longest_phase = 1;
+					for (int i = 2; i <= 3; i++) {
+						if (phase_interval[i] > phase_interval[i-1]) {longest_phase = i;}
+					}
+					motion_flag = longest_phase % 3 + 1;
+					prev_motion = 0; // signifies a new motion_flag set and to be executed
+				}
+				phase = next_phase;
+			}
 			// if(id==0){printf("%d\n",phase);}
 		}
 		// int angle_int = message->data[2];
