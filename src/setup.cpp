@@ -1,10 +1,10 @@
-#define ROBOT_COUNT 2
+#define ROBOT_COUNT 4
 #define NUM_IN_GROUP 1
 #define NUM_OF_GROUP 1
 #define ROBOT_SPACING 40
 
-#define ARENA_WIDTH (32*32 + 33*ROBOT_SPACING)
-#define ARENA_HEIGHT (32*32 + 33*ROBOT_SPACING)
+#define ARENA_WIDTH 1500//(32*32 + 33*ROBOT_SPACING)
+#define ARENA_HEIGHT 1500//(32*32 + 33*ROBOT_SPACING)
 
 #define LIGHT_CENTER_X ARENA_WIDTH
 #define LIGHT_CENTER_Y ARENA_HEIGHT
@@ -46,26 +46,45 @@ void setup_positions(float robot_pos[ROBOT_COUNT][4])
 	// 	robot_pos[i][0] = x;
 	// 	robot_pos[i][1] = y;
 	// 	robot_pos[i][2] = theta;
-	// 	robot_pos[i][3] = 0;
-	// 	if (i >= NUM_IN_GROUP) {
-	// 		robot_pos[i][3] = 1;
-	// 	}
-	// 	if (i >= NUM_IN_GROUP * 2) {
-	// 		robot_pos[i][3] = 2;
-	// 	}
+	// 	robot_pos[i][3] = i;
+	// 	// if (i >= NUM_IN_GROUP) {
+	// 	// 	robot_pos[i][3] = 1;
+	// 	// }
+	// 	// if (i >= NUM_IN_GROUP * 2) {
+	// 	// 	robot_pos[i][3] = 2;
+	// 	// }
 	// 	i++;
 	// }
 
+// triangular positions
 	robot_pos[0][0] = x;
-	robot_pos[0][1] = y;
+	robot_pos[0][1] = y-500;
 	robot_pos[0][2] = 0;
 	robot_pos[0][3] = 0;
 	robot_pos[1][0] = x;
-	robot_pos[1][1] = y + 200;
+	robot_pos[1][1] = y + 300;
 	robot_pos[1][2] = 0;
 	robot_pos[1][3] = 1;
-	robot_pos[2][0] = x + 200;
-	robot_pos[2][1] = y + 200;
+	robot_pos[2][0] = x - 300;
+	robot_pos[2][1] = y - 150;
 	robot_pos[2][2] = 0;
+	robot_pos[2][3] = 2;
+	robot_pos[3][0] = x + 300;
+	robot_pos[3][1] = y - 150;
+	robot_pos[3][2] = 0;
+	robot_pos[3][3] = 3;
+	// float x0;
+	// float y0;
+	// float t0;
+	// do
+	// {
+	// 	x0 = (float) rand() * (ARENA_WIDTH-2*radius) / RAND_MAX + radius;
+	// 	y0 = (float) rand() * (ARENA_HEIGHT-2*radius) / RAND_MAX + radius;
+	// 	t0 = rand() * 2 * PI / RAND_MAX;
+	// } while (collision(x0, y0, robot_pos, 0));
+	// robot_pos[0][0] = x0;
+	// robot_pos[0][1] = y0;
+	// robot_pos[0][2] = t0;
+	// robot_pos[0][3] = 0;
 
 }

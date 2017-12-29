@@ -15,29 +15,34 @@ class mykilobot : public kilobot
 	float theta;
 	message_t out_message;
 	long int motion_timer = 0;
-	int id1;
-	int id2; // use id1 and id2, together 16 bits, as identity in communication
-	float align_vec_x = 0;
-	float align_vec_y = 0;
-	float separ_vec_x = 0;
-	float separ_vec_y = 0;
-	float cohes_vec_x = 0;
-	float cohes_vec_y = 0;
-	float migra_vec_x = 0;
-	float migra_vec_y = 0;
-	float motion_vec_x = 0;
-	float motion_vec_y = 0;
+	int phase = 0; // phase change occurs when see new robot whose id denotes the new phase
+	// 0 phase is the initial state
 
 	//main loop
 	void loop()
 	{
 		// printf("%d\n", id);
 
-		set_color(RGB(1,0,0));
+		set_color(RGB(1,1,1));
 		if (id == 0){
-			// printf("%f\n", theta);
-			if (theta < 6.6 && theta > 6) {
-				set_color(RGB(0,1,0));
+			// printf("%d\n", phase);
+			switch (phase)
+			{
+				case 1:
+				{
+					set_color(RGB(1,0,0));
+					break;
+				}
+				case 2:
+				{
+					set_color(RGB(0,1,0));
+					break;
+				}
+				case 3:
+				{
+					set_color(RGB(0,0,1));
+					break;
+				}
 			}
 		}
 		// if (angle_to_light < 0.3 && angle_to_light > -0.3){
@@ -80,6 +85,7 @@ class mykilobot : public kilobot
 			motion_timer++;
 		} else {
 			out_message.type=NORMAL;
+			out_message.data[0] = id;
 			out_message.crc=message_crc(&out_message);
 		}
 
@@ -123,6 +129,14 @@ class mykilobot : public kilobot
 	{
 		dist = estimate_distance(distance_measurement);
 		theta=t;
+		if (id == 0 && message->data[0] == 3)
+		{
+			// printf("id: %d, theta: %f\n", message->data[0], theta);
+		}
+		if (id == 0 && ((theta < 6.5 && theta > 6.1) || (theta < 0.2 && theta > -0.2))) {
+			phase = message->data[0];
+			// if(id==0){printf("%d\n",phase);}
+		}
 		// int angle_int = message->data[2];
 		// if (angle_int != 255) { // 255 -> blank; 0-127 -> -PI-0; 127-254 -> 0-PI
 		// 	if (message->data[3]==id1 && message->data[4]==id2){
