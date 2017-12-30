@@ -82,15 +82,21 @@ class mykilobot : public kilobot
 		if (id == 0){
 			spinup_motors();
 			set_motors(50,0);
-			if (motion_flag && motion_flag != phase)
+			// if (motion_flag && motion_flag != phase)
+			// {
+			// 	if (prev_motion || phase == motion_flag % 3 + 1)
+			// 	{
+			// 		prev_motion = motion_flag;
+			// 		if (motion_timer % 4 == 0) {
+			// 			set_motors(50,50);
+			// 		}
+			// 	}
+			// }
+			float phase_weight = phase_interval[phase] / (phase_interval[1] + phase_interval[2] + phase_interval[3] + 1.0);
+			int thrust_freq = 2 + (int)(3 * (1 - phase_weight));
+			if (motion_timer % thrust_freq == 0)
 			{
-				if (prev_motion || phase == motion_flag % 3 + 1)
-				{
-					prev_motion = motion_flag;
-					if (motion_timer % 4 == 0) {
-						set_motors(50,50);
-					}
-				}
+				set_motors(-50, -50);
 			}
 			motion_timer++;
 		} else {
@@ -143,22 +149,25 @@ class mykilobot : public kilobot
 		// {
 			// printf("id: %d, theta: %f\n", message->data[0], theta);
 		// }
-		if (id == 0 && ((theta < 6.5 && theta > 6.1) || (theta < 0.2 && theta > -0.2))) {
+		if (id == 0 && ((theta < 6.1 && theta > 6.5) || (theta < 0.2 && theta > -0.2))) {
 			int next_phase = message->data[0];
 			if (phase != next_phase)
 			{
 				phase_start[next_phase] = motion_timer;
-				phase_interval[phase] = phase_start[next_phase] - phase_start[phase];
-				if (motion_flag == next_phase && prev_motion) {// prev_motion is nonzero only when the new motion que has started
-					motion_flag = 0;
-				} else if (!motion_flag && phase == prev_motion) {
-					int longest_phase = 1;
-					for (int i = 2; i <= 3; i++) {
-						if (phase_interval[i] > phase_interval[i-1]) {longest_phase = i;}
-					}
-					motion_flag = longest_phase;
-					prev_motion = 0; // signifies a new motion_flag set and to be executed
-				}
+				int interval = phase_start[next_phase] - phase_start[phase];
+				if (interval <= 3) {interval *= 300 * (phase % 2);}
+				phase_interval[phase] = interval;
+				printf("phase: %d, angle: %d\n", phase, phase_interval[phase]);
+				// if (motion_flag == next_phase && prev_motion) {// prev_motion is nonzero only when the new motion que has started
+				// 	motion_flag = 0;
+				// } else if (!motion_flag && phase == prev_motion) {
+				// 	int longest_phase = 1;
+				// 	for (int i = 2; i <= 3; i++) {
+				// 		if (phase_interval[i] > phase_interval[i-1]) {longest_phase = i;}
+				// 	}
+				// 	motion_flag = longest_phase;
+				// 	prev_motion = 0; // signifies a new motion_flag set and to be executed
+				// }
 				phase = next_phase;
 			}
 			// if(id==0){printf("%d\n",phase);}

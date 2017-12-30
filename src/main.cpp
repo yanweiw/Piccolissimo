@@ -286,6 +286,12 @@ bool run_simulation_step()
 			}
 			break;
 		}
+		case 5:
+		{
+			t += r->motor_error;
+			s = - (r->speed);
+			break;
+		}
 		}
 		double temp_x = s*cos(t) + r->pos[0];
 		double temp_y = s*sin(t) + r->pos[1];

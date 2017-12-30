@@ -116,16 +116,22 @@ public:
 		}
 		this->loop();
 		motor_command = 4;
-		if (right_ready && turn_right == kilo_turn_right)
+		if (right_ready && left_ready && turn_right == -50 && turn_left == -50)
 		{
-			motor_command -= 2;
+			motor_command = 5;
+		} else {
+			if (right_ready && turn_right == kilo_turn_right)
+			{
+				motor_command -= 2;
+			}
+			else right_ready = false;
+			if (left_ready && turn_left == kilo_turn_left)
+			{
+				motor_command -= 1;
+			}
+			else left_ready = false;
 		}
-		else right_ready = false;
-		if (left_ready && turn_left == kilo_turn_left)
-		{
-			motor_command -= 1;
-		}
-		else left_ready = false;
+		
 		if (message_tx())
 			tx_request = ir;
 		else
