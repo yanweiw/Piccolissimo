@@ -92,9 +92,21 @@ class mykilobot : public kilobot
 			// 		}
 			// 	}
 			// }
+
+			// int max = 1;
+			// int min = 1;
+			// for (int i = 2; i <= 3; i++) {
+			// 	if (phase_interval[i] > phase_interval[max]) {max = i;}
+			// 	if (phase_interval[i] < phase_interval[min]) {min = i;}
+			// }
+			// int ctrl;
+			// if (phase == max) {ctrl = phase;}
+			// else if (phase == min) {ctrl = 6 - max - min;}
+			// else {ctrl = min;}
+
 			float phase_weight = phase_interval[phase] / (phase_interval[1] + phase_interval[2] + phase_interval[3] + 1.0);
-			int thrust_freq = 2 + (int)(3 * (1 - phase_weight));
-			if (motion_timer % thrust_freq == 0)
+			int thrust_freq = 2 + (int)(6 * (1 - phase_weight));
+			if (motion_timer % thrust_freq == 0 )
 			{
 				set_motors(-50, -50);
 			}
@@ -133,7 +145,7 @@ class mykilobot : public kilobot
 	{
 		static int count = rand();
 		count--;
-		if (!(count % 2))
+		if (!(count % 1))
 		{
 			return &out_message;
 		}
@@ -149,15 +161,18 @@ class mykilobot : public kilobot
 		{
 			// printf("id: %d, theta: %f\n", message->data[0], theta);
 		}
-		if (id == 0 && ((theta < 6.2 && theta > 6.4) || (theta < 0.1 && theta > -0.1))) {
+		if (id == 0 && ((theta > 6.2 && theta < 6.4) || (theta < 0.1 && theta > -0.1))) {
 			int next_phase = message->data[0];
 			if (phase != next_phase)
 			{
 				phase_start[next_phase] = motion_timer;
 				int interval = phase_start[next_phase] - phase_start[phase];
-				if (interval <= 3) {interval *= 300 * (phase % 2);}
-				phase_interval[phase] = interval;
-				printf("phase: %d, angle: %d\n", phase, phase_interval[phase]);
+				// if (interval <= 3) {interval *= 300 * (phase % 2);}
+				if (interval > 3) {
+					phase_interval[phase] = interval;
+					printf("phase: %d, angle: %d\n", phase, phase_interval[phase]);
+					phase = next_phase;
+				}
 				// if (motion_flag == next_phase && prev_motion) {// prev_motion is nonzero only when the new motion que has started
 				// 	motion_flag = 0;
 				// } else if (!motion_flag && phase == prev_motion) {
@@ -168,7 +183,6 @@ class mykilobot : public kilobot
 				// 	motion_flag = longest_phase;
 				// 	prev_motion = 0; // signifies a new motion_flag set and to be executed
 				// }
-				phase = next_phase;
 			}
 			// if(id==0){printf("%d\n",phase);}
 		}

@@ -57,8 +57,8 @@ void setup_positions(float robot_pos[ROBOT_COUNT][4])
 	// }
 
 // triangular positions
-	robot_pos[0][0] = x;//-200;
-	robot_pos[0][1] = y+400;
+	robot_pos[0][0] = x - 50;
+	robot_pos[0][1] = y+300;
 	robot_pos[0][2] = 0;
 	robot_pos[0][3] = 0;
 	robot_pos[1][0] = x;
