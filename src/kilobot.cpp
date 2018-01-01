@@ -133,7 +133,7 @@ class mykilobot : public kilobot
 	{
 		static int count = rand();
 		count--;
-		if (!(count % 1))
+		if (!(count % 2))
 		{
 			return &out_message;
 		}
@@ -145,11 +145,11 @@ class mykilobot : public kilobot
 	{
 		dist = estimate_distance(distance_measurement);
 		theta=t;
-		// if (id == 0 && message->data[0] == 3)
-		// {
+		if (id == 0 && message->data[0] == 1)
+		{
 			// printf("id: %d, theta: %f\n", message->data[0], theta);
-		// }
-		if (id == 0 && ((theta < 6.1 && theta > 6.5) || (theta < 0.2 && theta > -0.2))) {
+		}
+		if (id == 0 && ((theta < 6.2 && theta > 6.4) || (theta < 0.1 && theta > -0.1))) {
 			int next_phase = message->data[0];
 			if (phase != next_phase)
 			{
