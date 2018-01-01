@@ -4,7 +4,7 @@
 #define ROTATIONPERTICK 0.05
 #define DISTANCEPERTICK 0.5
 #define RADPERINT 0.02472
-#define BEACON_NUM 3
+#define BEACON_NUM 6
 
 class mykilobot : public kilobot
 {
@@ -42,13 +42,28 @@ class mykilobot : public kilobot
 					set_color(RGB(0,0,1));
 					break;
 				}
+				case 4:
+				{
+					set_color(RGB(1,1,0));
+					break;
+				}
+				case 5:
+				{
+					set_color(RGB(0,1,1));
+					break;
+				}
+				case 6:
+				{
+					set_color(RGB(1,0,1));
+					break;
+				}
 			}
 
 			spinup_motors();
 			set_motors(50,0);
 
 			float phase_weight = phase_interval[phase] / (phase_interval[1] + phase_interval[2] + phase_interval[3] + 1.0);
-			int thrust_freq = 2 + (int)(6 * (1 - phase_weight));
+			int thrust_freq = 2 + (int)(12 * (1 - phase_weight));
 			if (motion_timer % thrust_freq == 0 )
 			{
 				set_motors(-50, -50);
@@ -94,9 +109,9 @@ class mykilobot : public kilobot
 			{
 				phase_start[next_phase] = motion_timer;
 				int interval = phase_start[next_phase] - phase_start[phase];
-				if (interval > 3) {
+				if (interval > 0) {
 					phase_interval[phase] = interval;
-					// printf("phase: %d, angle: %d\n", phase, phase_interval[phase]);
+					printf("phase: %d, angle: %d\n", phase, phase_interval[phase]);
 					phase = next_phase;
 				}
 			}
