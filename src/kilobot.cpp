@@ -3,11 +3,8 @@
 
 #define ROTATIONPERTICK 0.05
 #define DISTANCEPERTICK 0.5
-#define ALIGN_CONST 1
-#define REPUL_CONST 80
-#define COHES_CONST 0.0009
-#define MIGRA_CONST 0.2
 #define RADPERINT 0.02472
+#define BEACON_NUM 3
 
 class mykilobot : public kilobot
 {
@@ -17,19 +14,17 @@ class mykilobot : public kilobot
 	long int motion_timer = 0;
 	int phase = 0; // phase change occurs when see new robot whose id denotes the new phase
 	// 0 phase is the initial state
-	long int phase_start[4]; // array to record start time of each phase
-	int phase_interval[4];
+	long int phase_start[BEACON_NUM + 1]; // array to record start time of each phase
+	int phase_interval[BEACON_NUM + 1];
 	int motion_flag = 0; // 0 means stop, nonzero means move at that phase
 	int prev_motion = 0; // record previous motion phase
 
 	//main loop
 	void loop()
 	{
-		// printf("%d\n", id);
-
 		set_color(RGB(1,1,1));
+
 		if (id == 0){
-			// printf("phase 1: %d, phase 2: %d, phase 3: %d\n", phase_interval[1], phase_interval[2], phase_interval[3]);
 			switch (phase)
 			{
 				case 1:
@@ -48,61 +43,9 @@ class mykilobot : public kilobot
 					break;
 				}
 			}
-		}
-		// if (angle_to_light < 0.3 && angle_to_light > -0.3){
-			// set_color(RGB(0,1,0));
-		// }
-		// out_message.type=NORMAL;
-		// out_message.data[0]=id1;
-		// out_message.data[1]=id2;
-    //
-		// spinup_motors();
-		// motion_timer = kilo_ticks;
-		// separ_vec_x = 0.5 * separ_vec_x;
-		// separ_vec_y = 0.5 * separ_vec_y;
-		// cohes_vec_x = 0.6 * cohes_vec_x;
-		// cohes_vec_y = 0.6 * cohes_vec_y;
-		// migra_vec_x = sin(angle_to_light) * MIGRA_CONST;
-		// migra_vec_y = cos(angle_to_light) * MIGRA_CONST;
-		// motion_vec_x = align_vec_x - migra_vec_x - separ_vec_x - cohes_vec_x;
-		// motion_vec_y = align_vec_y - migra_vec_y - separ_vec_y - cohes_vec_y;
-		// float bearing = atan2(motion_vec_x, motion_vec_y);
-		// float disttogo = distance(0, 0, motion_vec_x, motion_vec_y);
-		// int tickstorotate = (int)(abs(bearing/ROTATIONPERTICK)/5);
-		// int tickstomove = (int) (disttogo/DISTANCEPERTICK);
-		// if (kilo_ticks < motion_timer + tickstorotate) {
-		// 	if (bearing <= 0) {
-		// 		set_motors(0,kilo_turn_right);
-		// 	} else {
-		// 		set_motors(kilo_turn_left,0);
-		// 	}
-		// }
-    //
-		// out_message.crc=message_crc(&out_message);
-		if (id == 0){
+
 			spinup_motors();
 			set_motors(50,0);
-			// if (motion_flag && motion_flag != phase)
-			// {
-			// 	if (prev_motion || phase == motion_flag % 3 + 1)
-			// 	{
-			// 		prev_motion = motion_flag;
-			// 		if (motion_timer % 4 == 0) {
-			// 			set_motors(50,50);
-			// 		}
-			// 	}
-			// }
-
-			// int max = 1;
-			// int min = 1;
-			// for (int i = 2; i <= 3; i++) {
-			// 	if (phase_interval[i] > phase_interval[max]) {max = i;}
-			// 	if (phase_interval[i] < phase_interval[min]) {min = i;}
-			// }
-			// int ctrl;
-			// if (phase == max) {ctrl = phase;}
-			// else if (phase == min) {ctrl = 6 - max - min;}
-			// else {ctrl = min;}
 
 			float phase_weight = phase_interval[phase] / (phase_interval[1] + phase_interval[2] + phase_interval[3] + 1.0);
 			int thrust_freq = 2 + (int)(6 * (1 - phase_weight));
@@ -116,23 +59,11 @@ class mykilobot : public kilobot
 			out_message.data[0] = id;
 			out_message.crc=message_crc(&out_message);
 		}
-
-
-		// printf("%f\n", angle_to_light);
 	}
 
 	//executed once at start
 	void setup()
 	{
-		// out_message.type = NORMAL;
-		// id1 = rand() % 256;
-		// id2 = rand() % 256;
-		// out_message.data[0] = id1; // sender id
-		// out_message.data[1] = id2;
-		// out_message.data[2] = 255; // 255 signifies blank message
-		// out_message.data[3] = 0;
-		// out_message.data[4] = 0; // target recepient id , currently blank
-		// out_message.crc = message_crc(&out_message);
 	}
 
 	//executed on successfull message send
@@ -157,50 +88,18 @@ class mykilobot : public kilobot
 	{
 		dist = estimate_distance(distance_measurement);
 		theta=t;
-		if (id == 0 && message->data[0] == 1)
-		{
-			// printf("id: %d, theta: %f\n", message->data[0], theta);
-		}
 		if (id == 0 && ((theta > 6.2 && theta < 6.4) || (theta < 0.1 && theta > -0.1))) {
 			int next_phase = message->data[0];
 			if (phase != next_phase)
 			{
 				phase_start[next_phase] = motion_timer;
 				int interval = phase_start[next_phase] - phase_start[phase];
-				// if (interval <= 3) {interval *= 300 * (phase % 2);}
 				if (interval > 3) {
 					phase_interval[phase] = interval;
-					printf("phase: %d, angle: %d\n", phase, phase_interval[phase]);
+					// printf("phase: %d, angle: %d\n", phase, phase_interval[phase]);
 					phase = next_phase;
 				}
-				// if (motion_flag == next_phase && prev_motion) {// prev_motion is nonzero only when the new motion que has started
-				// 	motion_flag = 0;
-				// } else if (!motion_flag && phase == prev_motion) {
-				// 	int longest_phase = 1;
-				// 	for (int i = 2; i <= 3; i++) {
-				// 		if (phase_interval[i] > phase_interval[i-1]) {longest_phase = i;}
-				// 	}
-				// 	motion_flag = longest_phase;
-				// 	prev_motion = 0; // signifies a new motion_flag set and to be executed
-				// }
 			}
-			// if(id==0){printf("%d\n",phase);}
 		}
-		// int angle_int = message->data[2];
-		// if (angle_int != 255) { // 255 -> blank; 0-127 -> -PI-0; 127-254 -> 0-PI
-		// 	if (message->data[3]==id1 && message->data[4]==id2){
-		// 		float angletoturn = (theta - (angle_int - 127) * RADPERINT - PI);
-		// 		align_vec_x = ALIGN_CONST * (-sin(angletoturn));
-		// 		align_vec_y = ALIGN_CONST * (-cos(angletoturn));
-		// 	}
-		// }
-		// out_message.data[2] = (int)((theta + PI) / RADPERINT);
-		// out_message.data[3] = message->data[0];
-		// out_message.data[4] = message->data[1];
-    //
-		// separ_vec_x += REPUL_CONST * (-sin(theta)) / dist;
-		// separ_vec_y += REPUL_CONST * (-cos(theta)) / dist;
-		// cohes_vec_x += COHES_CONST * (sin(theta) * dist);
-		// cohes_vec_y += COHES_CONST * (cos(theta) * dist);
 	}
 };
