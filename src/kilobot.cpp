@@ -62,7 +62,7 @@ class mykilobot : public kilobot
 			spinup_motors();
 			set_motors(50,0);
 
-			float phase_weight = phase_interval[phase] / (phase_interval[1] + phase_interval[2] + phase_interval[3] + 1.0);
+			float phase_weight = phase_interval[phase] / 125.6;
 			int thrust_freq = 2 + (int)(12 * (1 - phase_weight));
 			if (motion_timer % thrust_freq == 0 )
 			{
@@ -109,7 +109,9 @@ class mykilobot : public kilobot
 			{
 				phase_start[next_phase] = motion_timer;
 				int interval = phase_start[next_phase] - phase_start[phase];
-				if (interval > 0) {
+				if (interval <= 14) {
+					phase_interval[phase] = 0;
+				} else {
 					phase_interval[phase] = interval;
 					printf("phase: %d, angle: %d\n", phase, phase_interval[phase]);
 					phase = next_phase;
