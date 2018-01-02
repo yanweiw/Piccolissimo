@@ -1,9 +1,7 @@
 #pragma once
 #include "kilolib.h"
 
-#define ROTATIONPERTICK 0.05
-#define DISTANCEPERTICK 0.5
-#define RADPERINT 0.02472
+#define ROBOT_COUNT 1
 #define BEACON_NUM 6
 
 class mykilobot : public kilobot
@@ -12,19 +10,17 @@ class mykilobot : public kilobot
 	float theta;
 	message_t out_message;
 	long int motion_timer = 0;
-	int phase = 0; // phase change occurs when see new robot whose id denotes the new phase
-	// 0 phase is the initial state
-	long int phase_start[BEACON_NUM + 1]; // array to record start time of each phase
-	int phase_interval[BEACON_NUM + 1];
-	int motion_flag = 0; // 0 means stop, nonzero means move at that phase
-	int prev_motion = 0; // record previous motion phase
+	int phase; // phase change occurs when see new robot whose id denotes the new phase
+	long int phase_start[BEACON_NUM + ROBOT_COUNT]; // array to record start time of each phase
+	int phase_interval[BEACON_NUM + ROBOT_COUNT];
 
 	//main loop
 	void loop()
 	{
 		set_color(RGB(1,1,1));
+		printf("%d\n", id);
 
-		if (id == 0){
+		if (id >= BEACON_NUM){
 			switch (phase)
 			{
 				case 1:
@@ -52,7 +48,7 @@ class mykilobot : public kilobot
 					set_color(RGB(0,1,1));
 					break;
 				}
-				case 6:
+				case 0:
 				{
 					set_color(RGB(1,0,1));
 					break;
@@ -69,11 +65,10 @@ class mykilobot : public kilobot
 				set_motors(-50, -50);
 			}
 			motion_timer++;
-		} else {
-			out_message.type=NORMAL;
-			out_message.data[0] = id;
-			out_message.crc=message_crc(&out_message);
 		}
+		out_message.type=NORMAL;
+		out_message.data[0] = id;
+		out_message.crc=message_crc(&out_message);
 	}
 
 	//executed once at start
@@ -103,13 +98,13 @@ class mykilobot : public kilobot
 	{
 		dist = estimate_distance(distance_measurement);
 		theta=t;
-		if (id == 0 && ((theta > 6.2 && theta < 6.4) || (theta < 0.1 && theta > -0.1))) {
+		if (id >= BEACON_NUM && ((theta > 6.2 && theta < 6.4) || (theta < 0.1 && theta > -0.1))) {
 			int next_phase = message->data[0];
 			if (phase != next_phase)
 			{
 				phase_start[next_phase] = motion_timer;
 				int interval = phase_start[next_phase] - phase_start[phase];
-				if (interval <= 14) {
+				if (interval <= 14) { // 14 corresponds to 40 degree
 					phase_interval[phase] = 0;
 				} else {
 					phase_interval[phase] = interval;
