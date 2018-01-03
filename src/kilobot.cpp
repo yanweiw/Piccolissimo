@@ -1,8 +1,8 @@
 #pragma once
 #include "kilolib.h"
 
-#define ROBOT_COUNT 1
-#define BEACON_NUM 6
+#define BEACON_NUM 8
+#define ROBOT_COUNT 10
 
 class mykilobot : public kilobot
 {
@@ -11,14 +11,15 @@ class mykilobot : public kilobot
 	message_t out_message;
 	long int motion_timer = 0;
 	int phase; // phase change occurs when see new robot whose id denotes the new phase
-	long int phase_start[BEACON_NUM + ROBOT_COUNT]; // array to record start time of each phase
-	int phase_interval[BEACON_NUM + ROBOT_COUNT];
+	long int phase_start[ROBOT_COUNT]; // array to record start time of each phase
+	int phase_interval[ROBOT_COUNT];
 
 	//main loop
 	void loop()
 	{
+
 		set_color(RGB(1,1,1));
-		printf("%d\n", id);
+		// printf("%d\n", id);
 
 		if (id >= BEACON_NUM){
 			switch (phase)
