@@ -1,6 +1,6 @@
 #define BEACON_NUM 8
 #define ROBOT_COUNT 10
-#define COLS 2
+#define COLS 3
 #define ROWS 3
 #define HOR_SEPAR 200
 #define VER_SEPAR HOR_SEPAR / 100 * 173 / 2
@@ -60,14 +60,14 @@ void setup_positions(float robot_pos[ROBOT_COUNT][4])
 	}
 
 //triangular positions
-	// robot_pos[0][0] = x + 50;
-	// robot_pos[0][1] = y+300;
-	// robot_pos[0][2] = 0;
-	// robot_pos[0][3] = 0;
-	// robot_pos[1][0] = x;
-	// robot_pos[1][1] = y + 200;
-	// robot_pos[1][2] = 0;
-	// robot_pos[1][3] = 1;
+	// robot_pos[8][0] = HOR_SEPAR;
+	// robot_pos[8][1] = VER_SEPAR;
+	// robot_pos[8][2] = 0;
+	// robot_pos[8][3] = 8;
+	// robot_pos[9][0] = 2 * HOR_SEPAR;
+	// robot_pos[9][1] = VER_SEPAR;
+	// robot_pos[9][2] = 0;
+	// robot_pos[9][3] = 9;
 	// robot_pos[2][0] = x - 200;
 	// robot_pos[2][1] = y - 100;
 	// robot_pos[2][2] = 0;
